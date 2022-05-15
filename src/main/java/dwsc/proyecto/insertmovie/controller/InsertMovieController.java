@@ -11,10 +11,16 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.ResponseStatusException;
 
 import dwsc.proyecto.insertmovie.domain.Movie;
+import dwsc.proyecto.insertmovie.exceptions.CustomResponse;
 import dwsc.proyecto.insertmovie.exceptions.MovieDuplicatedException;
 import dwsc.proyecto.insertmovie.exceptions.MovieNotFoundException;
 import dwsc.proyecto.insertmovie.service.MovieService;
 import dwsc.proyecto.insertmovie.service.MovieServiceClient;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 
 @RestController
 public class InsertMovieController {
@@ -28,7 +34,10 @@ public class InsertMovieController {
 	 * verify movie service response status code
 	 */
 	private int resCode;
-
+	
+	@Operation(summary = "Insert movie in database", description = "Operation to insert valid movie in database")
+	@ApiResponses({ @ApiResponse(responseCode = "201", description = "movie inserted succesfully"),
+			@ApiResponse(responseCode = "404", description = "movie not found", content = @Content(schema = @Schema(implementation = CustomResponse.class))) })
 	@RequestMapping(method = RequestMethod.POST, path = "/movie", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<Movie> createMovie(@RequestBody Movie movie)
 			throws Exception {
@@ -56,6 +65,6 @@ public class InsertMovieController {
 			throw new Exception("An error has ocurred while inserting the movie" + e);
 		}
 
-		return ResponseEntity.ok(movie);
+		return new ResponseEntity<Movie>(movie, HttpStatus.CREATED); 
 	}
 }
