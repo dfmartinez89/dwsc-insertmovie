@@ -3,24 +3,57 @@ package dwsc.proyecto.insertmovie.domain;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.NonNull;
-import lombok.Setter;
 
 @Document
-@NoArgsConstructor  
-@AllArgsConstructor
 public class Movie {
 	@Id
-	private @Getter @Setter String id;
-	@NonNull 
-	private @Getter @Setter String title;
-	@NonNull 
-	private @Getter @Setter int year;
-	private @Getter @Setter int averageScore;
-	private @Getter @Setter String description;
-	private @Getter @Setter String url;
+	private  String id;
+	
+	private String title;
+	
+	public String getId() {
+		return id;
+	}
+	public Movie() {
+		super();
+		// TODO Auto-generated constructor stub
+	}
+	public void setId(String id) {
+		this.id = id;
+	}
+	public String getTitle() {
+		return title;
+	}
+	public void setTitle(String title) {
+		this.title = title;
+	}
+	public int getYear() {
+		return year;
+	}
+	public void setYear(int year) {
+		this.year = year;
+	}
+	public int getAverageScore() {
+		return averageScore;
+	}
+	public void setAverageScore(int averageScore) {
+		this.averageScore = averageScore;
+	}
+	public String getDescription() {
+		return description;
+	}
+	public void setDescription(String description) {
+		this.description = description;
+	}
+	public String getUrl() {
+		return url;
+	}
+	public void setUrl(String url) {
+		this.url = url;
+	}
+	private  int year;
+	private  int averageScore;
+	private String description;
+	private  String url;
 
 }
