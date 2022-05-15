@@ -9,5 +9,5 @@ import org.springframework.web.bind.annotation.RequestParam;
 @FeignClient("VERIFYMOVIE")
 public interface MovieServiceClient {
 	@GetMapping("/{title}")
-	public ResponseEntity<String> checkMovie(@PathVariable String title, @RequestParam(defaultValue = "") String year);
+	public ResponseEntity<String> checkMovie(@PathVariable String title, @RequestParam(required = false) int year);
 }
