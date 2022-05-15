@@ -1,8 +1,8 @@
 package dwsc.proyecto.insertmovie.service;
 
 import java.util.List;
-import java.util.Optional;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import dwsc.proyecto.insertmovie.dao.MovieRepository;
@@ -10,11 +10,12 @@ import dwsc.proyecto.insertmovie.domain.Movie;
 
 @Service
 public class MovieServiceImpl implements MovieService {
+	@Autowired
 	private MovieRepository movieRepo;
 
-	public Movie getMovie(String title, int year) {
-		Optional<List<Movie>> movie = Optional.ofNullable((movieRepo.findByTitleAndYear(title, year)));
-		return (Movie) movie.get();
+	public List<Movie> getMovie(String title, Integer year) {
+		List<Movie> movie = (movieRepo.findByTitleAndYear(title, year));
+		return movie;
 	}
 
 	public void insertMovie(Movie movie) {

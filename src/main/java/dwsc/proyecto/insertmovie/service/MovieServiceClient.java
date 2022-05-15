@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestParam;
 
 @Service
-@FeignClient("VERIFYMOVIE")
+@FeignClient("VERIFY-MOVIE")
 public interface MovieServiceClient {
 	@GetMapping("/{title}")
 	public ResponseEntity<String> checkMovie(@PathVariable String title, @RequestParam(required = false) Integer year);
