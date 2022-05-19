@@ -10,5 +10,5 @@ import dwsc.proyecto.insertmovie.domain.Movie;
 
 @RepositoryRestResource(collectionResourceRel = "movie", path = "movie")
 public interface MovieRepository extends MongoRepository<Movie, String> {
-	List<Movie> findByTitleAndYear(@Param("title") String title, @Param("year") Integer year);
+	List<Movie> findByTitle(@Param("title") String title);
 }

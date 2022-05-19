@@ -45,10 +45,9 @@ public class InsertMovieController {
 	public ResponseEntity<Movie> createMovie(@Parameter(description = "Movie details")@RequestBody Movie movie)
 			throws Exception {
 		String movieTitle = movie.getTitle();
-		int movieYear = movie.getYear();
 		try {
 			// check if the movie exists in OMDb
-			resCode = movieClient.checkMovie(movieTitle, movieYear).getStatusCodeValue();
+			resCode = movieClient.checkMovie(movieTitle).getStatusCodeValue();
 			if (resCode == 404) {
 				throw new MovieNotFoundException(HttpStatus.CONFLICT, "The movie " + movieTitle + " does not exists");
 			}
@@ -57,7 +56,7 @@ public class InsertMovieController {
 		}
 
 		// check if the movie already exists in our DB
-		List <Movie> movieDb = movieService.getMovie(movieTitle, movieYear);
+		List <Movie> movieDb = movieService.getMovie(movieTitle);
 		if (!movieDb.isEmpty()) {
 			throw new MovieDuplicatedException(HttpStatus.CONFLICT, "The movie " + movieTitle + " already exists");
 		}

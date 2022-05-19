@@ -5,11 +5,10 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestParam;
 
 @Service
 @FeignClient("VERIFY-MOVIE")
 public interface MovieServiceClient {
 	@GetMapping("/{title}")
-	public ResponseEntity<String> checkMovie(@PathVariable String title, @RequestParam(required = false) Integer year);
+	public ResponseEntity<String> checkMovie(@PathVariable String title);
 }

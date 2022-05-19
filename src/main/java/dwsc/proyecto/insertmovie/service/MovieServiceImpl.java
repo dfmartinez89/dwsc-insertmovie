@@ -13,8 +13,8 @@ public class MovieServiceImpl implements MovieService {
 	@Autowired
 	private MovieRepository movieRepo;
 
-	public List<Movie> getMovie(String title, Integer year) {
-		List<Movie> movie = (movieRepo.findByTitleAndYear(title, year));
+	public List<Movie> getMovie(String title) {
+		List<Movie> movie = movieRepo.findByTitle(title);
 		return movie;
 	}
 

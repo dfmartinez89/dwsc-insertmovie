@@ -8,7 +8,7 @@ import dwsc.proyecto.insertmovie.domain.Movie;
 
 @Service
 public interface MovieService {
-	public List<Movie> getMovie(String title, Integer year);
+	public List<Movie> getMovie(String title);
 
 	public void insertMovie(Movie movie);
 
