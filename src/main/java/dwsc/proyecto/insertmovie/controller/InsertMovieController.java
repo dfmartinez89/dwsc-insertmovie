@@ -1,6 +1,6 @@
 package dwsc.proyecto.insertmovie.controller;
 
-import java.util.List;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -24,9 +24,10 @@ import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.tags.Tag;
 
 @RestController
-@RequestMapping("movie")
+@Tag(name = "movies", description = "insert movie")
 public class InsertMovieController {
 	@Autowired
 	private MovieServiceClient movieClient;
@@ -38,14 +39,15 @@ public class InsertMovieController {
 	 * verify movie service response status code
 	 */
 	private int resCode;
-	
+
 	@Operation(summary = "Insert movie in database", description = "Operation to insert valid movie in database")
 	@ApiResponses({ @ApiResponse(responseCode = "201", description = "movie inserted succesfully"),
 			@ApiResponse(responseCode = "404", description = "movie not found", content = @Content(schema = @Schema(implementation = CustomResponse.class))) })
-	@RequestMapping(method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<Movie> createMovie(@Parameter(description = "Movie details")@RequestBody Movie movie)
+	@RequestMapping(method = RequestMethod.POST, path = "/movie", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+	public ResponseEntity<Movie> createMovie(@Parameter(description = "Movie details") @RequestBody Movie movie)
 			throws Exception {
 		String movieTitle = movie.getTitle();
+		Integer movieYear = movie.getYear();
 		try {
 			// check if the movie exists in OMDb
 			resCode = movieClient.checkMovie(movieTitle).getStatusCodeValue();
@@ -57,17 +59,18 @@ public class InsertMovieController {
 		}
 
 		// check if the movie already exists in our DB
-		List <Movie> movieDb = movieService.getMovie(movieTitle);
+		Optional<Movie> movieDb = movieService.getMovie(movieTitle, movieYear);
 		if (!movieDb.isEmpty()) {
-			throw new MovieDuplicatedException(HttpStatus.CONFLICT, "The movie " + movieTitle + " already exists");
+			throw new MovieDuplicatedException(HttpStatus.CONFLICT,
+					"A movie with title " + movieTitle + " from year " + movieYear + " already exists");
 		}
-		
+
 		try {
 			movieService.insertMovie(movie);
 		} catch (Exception e) {
-			throw new Exception("An error has ocurred while inserting the movie" + e);
+			throw new Exception("An error has ocurred while inserting the movie " + e);
 		}
 
-		return new ResponseEntity<Movie>(movie, HttpStatus.CREATED); 
+		return new ResponseEntity<Movie>(movie, HttpStatus.CREATED);
 	}
 }

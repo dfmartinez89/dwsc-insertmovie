@@ -1,6 +1,6 @@
 package dwsc.proyecto.insertmovie.dao;
 
-import java.util.List;
+import java.util.Optional;
 
 import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.data.repository.query.Param;
@@ -10,5 +10,5 @@ import dwsc.proyecto.insertmovie.domain.Movie;
 
 @RepositoryRestResource(collectionResourceRel = "movie", path = "movie")
 public interface MovieRepository extends MongoRepository<Movie, String> {
-	List<Movie> findByTitle(@Param("title") String title);
+	Optional<Movie> findByTitleAndYear(@Param("title") String title, @Param("year") Integer year);
 }

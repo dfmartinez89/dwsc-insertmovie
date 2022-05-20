@@ -20,6 +20,11 @@ info:
   description: This application inserts a new movie in db
 server:
  port: ${PORT:${SERVER_PORT:0}}
+ error:
+  include-message: always
+  include-binding-errors: always
+  include-stacktrace: always
+  include-exception: true
 
 spring:
  application:
