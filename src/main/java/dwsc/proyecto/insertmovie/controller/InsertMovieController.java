@@ -26,6 +26,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 
 @RestController
+@RequestMapping("movie")
 public class InsertMovieController {
 	@Autowired
 	private MovieServiceClient movieClient;
@@ -41,7 +42,7 @@ public class InsertMovieController {
 	@Operation(summary = "Insert movie in database", description = "Operation to insert valid movie in database")
 	@ApiResponses({ @ApiResponse(responseCode = "201", description = "movie inserted succesfully"),
 			@ApiResponse(responseCode = "404", description = "movie not found", content = @Content(schema = @Schema(implementation = CustomResponse.class))) })
-	@RequestMapping(method = RequestMethod.POST, path = "/movie", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+	@RequestMapping(method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<Movie> createMovie(@Parameter(description = "Movie details")@RequestBody Movie movie)
 			throws Exception {
 		String movieTitle = movie.getTitle();
@@ -49,7 +50,7 @@ public class InsertMovieController {
 			// check if the movie exists in OMDb
 			resCode = movieClient.checkMovie(movieTitle).getStatusCodeValue();
 			if (resCode == 404) {
-				throw new MovieNotFoundException(HttpStatus.CONFLICT, "The movie " + movieTitle + " does not exists");
+				throw new MovieNotFoundException(HttpStatus.NOT_FOUND, "The movie " + movieTitle + " does not exists");
 			}
 		} catch (RuntimeException e) {
 			throw new ResponseStatusException(HttpStatus.SERVICE_UNAVAILABLE, "Check-Movie Service is not available");
