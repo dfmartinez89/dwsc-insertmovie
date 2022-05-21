@@ -23,7 +23,7 @@ public class GlobalExceptionHandler {
 		CustomResponse resp = new CustomResponse();
 		resp.setTimestamp(LocalDateTime.now());
 		resp.setError(ex.getMessage());
-		return new ResponseEntity<>(resp, HttpStatus.NOT_FOUND);
+		return new ResponseEntity<>(resp, HttpStatus.CONFLICT);
 	}
 
 }

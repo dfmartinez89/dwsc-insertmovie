@@ -42,27 +42,32 @@ public class InsertMovieController {
 
 	@Operation(summary = "Insert movie in database", description = "Operation to insert valid movie in database")
 	@ApiResponses({ @ApiResponse(responseCode = "201", description = "movie inserted succesfully"),
-			@ApiResponse(responseCode = "404", description = "movie not found", content = @Content(schema = @Schema(implementation = CustomResponse.class))) })
+			@ApiResponse(responseCode = "404", description = "movie not found", content = @Content(schema = @Schema(implementation = CustomResponse.class))),
+			@ApiResponse(responseCode = "409", description = "movie duplicated", content = @Content(schema = @Schema(implementation = CustomResponse.class)))})
 	@RequestMapping(method = RequestMethod.POST, path = "/movie", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<Movie> createMovie(@Parameter(description = "Movie details") @RequestBody Movie movie)
-			throws Exception {
+			throws Exception, MovieDuplicatedException, MovieNotFoundException {
 		String movieTitle = movie.getTitle();
 		Integer movieYear = movie.getYear();
 		try {
 			// check if the movie exists in OMDb
 			resCode = movieClient.checkMovie(movieTitle).getStatusCodeValue();
 			if (resCode == 404) {
-				throw new MovieNotFoundException(HttpStatus.NOT_FOUND, "The movie " + movieTitle + " does not exists");
+				throw new MovieNotFoundException(HttpStatus.NOT_FOUND, "The movie with title: " + movieTitle + " does not exists");
 			}
 		} catch (RuntimeException e) {
 			throw new ResponseStatusException(HttpStatus.SERVICE_UNAVAILABLE, "Check-Movie Service is not available");
 		}
+		
+		String moviePoster = movieClient.checkMovie(movieTitle).toString();
+		
+		movie.setUrl(moviePoster);
 
 		// check if the movie already exists in our DB
 		Optional<Movie> movieDb = movieService.getMovie(movieTitle, movieYear);
 		if (!movieDb.isEmpty()) {
 			throw new MovieDuplicatedException(HttpStatus.CONFLICT,
-					"A movie with title " + movieTitle + " from year " + movieYear + " already exists");
+					"A movie with title: " + movieTitle + " from year: " + movieYear + " already exists");
 		}
 
 		try {
