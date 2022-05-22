@@ -13,11 +13,13 @@ public class MovieServiceImpl implements MovieService {
 	@Autowired
 	private MovieRepository movieRepo;
 
+	@Override
 	public Optional<Movie> getMovie(String title, Integer year) {
 		Optional<Movie> movie = movieRepo.findByTitleAndYear(title, year);
 		return movie;
 	}
 
+	@Override
 	public void insertMovie(Movie movie) {
 		movieRepo.save(movie);
 	}
