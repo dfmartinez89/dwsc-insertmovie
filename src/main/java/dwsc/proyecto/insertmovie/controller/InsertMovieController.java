@@ -59,7 +59,7 @@ public class InsertMovieController {
 			throw new ResponseStatusException(HttpStatus.SERVICE_UNAVAILABLE, "Check-Movie Service is not available");
 		}
 		
-		String moviePoster = movieClient.checkMovie(movieTitle).toString();
+		String moviePoster = movieClient.checkMovie(movieTitle).getBody().replace("\"", "").trim();
 		
 		movie.setUrl(moviePoster);
 
