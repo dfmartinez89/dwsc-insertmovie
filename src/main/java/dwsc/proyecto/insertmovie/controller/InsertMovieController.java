@@ -45,7 +45,7 @@ public class InsertMovieController {
 			@ApiResponse(responseCode = "404", description = "movie not found", content = @Content(schema = @Schema(implementation = CustomResponse.class))),
 			@ApiResponse(responseCode = "409", description = "movie duplicated", content = @Content(schema = @Schema(implementation = CustomResponse.class)))})
 	@RequestMapping(method = RequestMethod.POST, path = "/movie", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<Movie> createMovie(@Parameter(description = "Movie details") @RequestBody Movie movie)
+	public ResponseEntity<Movie> createMovie(@Parameter(description = "Movie details") @RequestBody(required = true) Movie movie)
 			throws Exception, MovieDuplicatedException, MovieNotFoundException {
 		String movieTitle = movie.getTitle();
 		Integer movieYear = movie.getYear();
